@@ -1,4 +1,4 @@
-package BlockNotas;
+package com.jacaranda.notas;
 
 public class NotaApp {
 

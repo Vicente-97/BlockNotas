@@ -1,4 +1,4 @@
-package BlockNotas;
+package com.jacaranda.notas;
 /**
  * Clase Nota de la creacion
  * de un Bloc de Notas
@@ -6,8 +6,6 @@ package BlockNotas;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-
-import Enteros.Entero;
 
 public class Nota implements Comparable<Nota> {
 
@@ -22,6 +20,8 @@ public class Nota implements Comparable<Nota> {
 	//constructores//
 	public Nota(String nota) {
 		this.texto=nota;
+		this.codigo=codigoSiguiente++;
+		this.fechaCreacion=LocalDateTime.now();
 	}
 	
 	
@@ -45,11 +45,25 @@ public class Nota implements Comparable<Nota> {
 	}
 	
 	public boolean isCreadoAnterior(Nota nota) {
+		
+		if (this.getFechaCreacion().isBefore(nota.getFechaUltimaModificacion())) {
+			return true;
+		}
 		return false;
 	}
 	
 	public boolean isModificadoAnterior (Nota nota) {
-		return false;
+		boolean isAnterior=false;
+		
+		if (this.getFechaUltimaModificacion()==null && nota.getFechaUltimaModificacion()==null) {
+			isAnterior=false;
+		}else if (isModificacion() && nota.isModificacion()) {
+			isAnterior= this.getFechaUltimaModificacion().isBefore(nota.getFechaUltimaModificacion());
+		}else if (this.isModificacion()) {
+			isAnterior=true;
+		}
+		
+		return isAnterior;
 	}
 	
 	
@@ -61,7 +75,7 @@ public class Nota implements Comparable<Nota> {
 
 	public void setTexto(String texto) {
 		this.texto = texto;
-	}
+		this.fechaUltimaModificacion=LocalDateTime.now();	}
 
 	public Integer getCodigo() {
 		return codigo;
@@ -89,7 +103,7 @@ public class Nota implements Comparable<Nota> {
 		Nota convertida = (Nota) notaDesconocida;
 		
 		SonLoMismo= this.texto.equals(notaDesconocida.getTexto()) &&
-				this.codigo.equals(notaDesconocida.getCodigo());
+				this.fechaCreacion.equals(notaDesconocida.getFechaCreacion());
 		
 		return SonLoMismo;
 	}
@@ -97,8 +111,7 @@ public class Nota implements Comparable<Nota> {
 
 	@Override
 	public String toString() {
-		return "Nota codigo=" + codigo + ", texto=" + texto + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaUltimaModificacion=" + fechaUltimaModificacion + "";
+		return "Nota [texto=" + texto +  "]";
 	}
 	
 	@Override
