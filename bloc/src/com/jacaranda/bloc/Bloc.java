@@ -1,42 +1,92 @@
 package com.jacaranda.bloc;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import com.jacaranda.notas.Nota;
+import com.jacaranda.notas.NotaAlarma;
+import com.jacaranda.notas.NotaAlarmaException;
 
 public class Bloc {
-
-	private static final Integer NUMERO_NOTAS_MAXIMA=10;
-	private Integer numNotas;
+	private static final int NUMERO_NOTAS_MAXIMA=100;
+	private int numNota;
 	private String nombre;
-	Nota[]blockNotas=new Nota[NUMERO_NOTAS_MAXIMA];
+	private Nota[] notas = new Nota[NUMERO_NOTAS_MAXIMA];
 	
-	
-	public Bloc(String textoBloc) {
-		this.nombre=textoBloc;
+	public Bloc() {
+		
 	}
 	
-	public String getNota(int posicion) {
-		String resultado="";
-		if(this.blockNotas[posicion-1]!=null) {
-		 return this.blockNotas[posicion-1].getTexto();
-		}else if (this.blockNotas[posicion]==null) {
-			resultado="No hay nota";
+	public Bloc(String nombre) {
+		this.nombre=nombre;
+		
+	}
+	
+	
+	
+	//methods
+	public void addNota(Nota nota) {
+		if (numNota<NUMERO_NOTAS_MAXIMA) {
+			this.notas[numNota]= nota;
+			numNota++;
+		}
+	}
+	public void addNota (int posicion, Nota nota) {
+		if (posicion<NUMERO_NOTAS_MAXIMA) {
+			this.notas[numNota]=nota;
+		
+		}
+	}
+	
+	
+	public String getNota(int numNota) {
+		
+		return null;
+		}
+	
+	public void updateNota(int posicion,String texto) {
+		if (posicion<NUMERO_NOTAS_MAXIMA && this.notas[posicion-1]!=null) {
+			this.notas[posicion-1].setTexto(texto);
+		}else {
+			throw new NotaAlarmaException("No se ha podido actualizar");
 		}
 		
-		return resultado;
-	}
-	
-	public void updateNota(String nota, int numero) {
-		setNombre(nota);
-		setNumNotas(numero);
+		
 		
 	}
-
-	public Integer getNumNotas() {
-		return numNotas;
+	
+	public void activa(int posicion) {
+		if (posicion < NUMERO_NOTAS_MAXIMA 
+				&& this.notas[posicion-1] instanceof NotaAlarma 
+				&& this.notas[posicion-1]!=null){
+				NotaAlarma notaActivar = (NotaAlarma)this.notas[posicion-1];
+				notaActivar.activar();
+		}else {
+			throw new NotaAlarmaException("No se ha podido activar la alarma");
+		}
+		
+	}
+	public void desactiva (int posicion) {
+		if (posicion < NUMERO_NOTAS_MAXIMA 
+				&& this.notas[posicion-1] instanceof NotaAlarma 
+				&& this.notas[posicion-1]!=null){
+				NotaAlarma notaActivar = (NotaAlarma)this.notas[posicion-1];
+				notaActivar.desconectar();
+		}else {
+			throw new NotaAlarmaException("No se ha podido desactivar la alarma");
+		}
+	}
+		
+	
+	public int ordenaBloc() {
+		return numNota;
 	}
 
-	public void setNumNotas(Integer numNotas) {
-		this.numNotas = numNotas;
+	public static int getNumeroNotasMaxima() {
+		return NUMERO_NOTAS_MAXIMA;
+	}
+	public void setNumNotas(int numNotas) {
+		this.numNota = numNotas;
 	}
 
 	public String getNombre() {
@@ -46,5 +96,55 @@ public class Bloc {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+	//HASHCODE
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre, numNota);
+	}
 	
-}
+	//EQUALS
+	@Override
+	public boolean equals(Object obj) {
+		boolean sonIguales=false;
+		Bloc other = (Bloc) obj;
+		if (this.nombre.equalsIgnoreCase(other.getNombre()))
+			sonIguales = true;
+	
+		
+		return sonIguales;
+	}
+	
+	
+	
+		
+	public Nota [] ordenarNota() {
+		
+		Nota[] ordenarNotas= new Nota[contadorNotasNonNulas()];
+		int cNotasOrdenadas=0;
+		for (int i=0; i<this.notas.length; i++) {
+			if(this.notas[i]!=null) {
+				ordenarNotas[cNotasOrdenadas++]=this.notas[i];
+			}
+		
+	}
+
+		Arrays.sort(ordenarNotas);
+		return ordenarNotas;
+	}
+	
+	
+	private int contadorNotasNonNulas() {
+		int contadorNotas=0;
+		for (int i=0; i<this.notas.length; i++) {
+			if(this.notas[i]!=null) {
+				contadorNotas++;
+			}
+		}return contadorNotas;
+	}
+	
+	
+		
+		
+	
+		
+	}

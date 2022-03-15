@@ -127,5 +127,5 @@ public class Nota implements Comparable<Nota> {
 		
 		return resultado;
 	}
-	
+
 }

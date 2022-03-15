@@ -26,17 +26,8 @@ public class NotaAlarma  extends Nota implements Activable {
 		super(nota);
 	}
 
-	@Override
-	public void activar() {
-		this.active=true;
-		
-	}
 
-	@Override
-	public void desconectar() {
-		this.active=false;
-		
-	}
+
 	
 	public boolean isActivado() {
 		
@@ -45,6 +36,18 @@ public class NotaAlarma  extends Nota implements Activable {
 		}
 		
 		return false;
+	}
+	@Override
+	public void desconectar() {
+		if (this.active==true) {
+			this.active=false;
+		}
+		
+	}
+	@Override
+	public void activar() {
+		this.active=true;
+		
 	}
 
 	private void setFechaAlarma(LocalDateTime fechaAlarma) {
